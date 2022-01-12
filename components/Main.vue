@@ -7,7 +7,7 @@
 
 <script>
 import Form from "@/components/Form";
-import Products from "../components/Products.vue";
+import Products from "@/components/Products.vue";
 
 export default {
   components: {
@@ -19,8 +19,9 @@ export default {
 
 <style lang="scss" scoped>
 .main {
+  display: flex;
   padding: 32px;
-//   height: 93vh;
   background: #e5e5e5;
+  justify-content: space-between;
 }
 </style>

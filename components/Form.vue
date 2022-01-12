@@ -50,9 +50,7 @@ $font-inter: "Inter", sans-serif;
 $input-padding: 10px 16px;
 $input-margin: 0 0 33px 0;
 
-.form_block {
-    display: flex;
-}
+
 
 .add_form {
   @extend %input-style;
@@ -100,6 +98,7 @@ $input-margin: 0 0 33px 0;
     text-align: center;
     letter-spacing: -0.02em;
     color: #b4b4b4;
+    background: #EEEEEE;
   }
 }
 </style>
