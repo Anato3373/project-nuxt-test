@@ -1,22 +1,25 @@
 <template>
 <div>
-  <Form/>
+  <section>
+    <Main />
+  </section>
 </div>
 </template>
 
 <script>
-import Form from "@/components/Form"
+import Main from "@/components/Main";
 
 export default {
-  name: 'IndexPage',
+  name: "IndexPage",
   components: {
-    Form: Form
-  }
-}
+    Main,
+  },
+};
 </script>
 
-<style lang="scss" scoped>
-  div {
-    padding: 32px;
-  }
+<style lang="scss">
+body {
+  padding: 0;
+  margin: 0;
+}
 </style>
