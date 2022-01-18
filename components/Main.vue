@@ -25,6 +25,5 @@ export default {
   display: flex;
   padding: 32px;
   background: #e5e5e5;
-  justify-content: space-between;
 }
 </style>
