@@ -1,7 +1,7 @@
 <template>
   <div class="form_block">
-    <form @submit.prevent="postProduct()" class="add_form">
-      <label for="name">Наименование товара<span></span></label>
+    <form @submit.prevent="postProduct();clearInputs()" class="add_form">
+      <label for="name">Наименование товара<span v-if="name.length<1"></span></label>
       <input
         type="text"
         id="name"
@@ -9,16 +9,16 @@
         class="add_form__input"
         v-model="name"
       />
-      <label for="textarea">Описание товара<span></span></label>
+      <label for="description">Описание товара<span v-if="description.length<1"></span></label>
       <textarea
         class="add_form__txtar"
         placeholder="Введите описание товара"
-        id="textarea"
+        id="description"
         cols="30"
         rows="10"
-        v-model="textarea"
+        v-model="description"
       ></textarea>
-      <label for="img">Ссылка на изображение товара<span></span></label>
+      <label for="img">Ссылка на изображение товара<span v-if="img.length<1"></span></label>
       <input
         class="add_form__input"
         id="img"
@@ -27,8 +27,8 @@
         v-model="img"
       />
       <label for="price"
-        >Цена товара<span></span
-      ></label>
+        >Цена товара<span v-if="price.length<1"></span>
+      </label>
       <input
         class="add_form__input"
         id="price"
@@ -36,19 +36,21 @@
         type="text"
         v-model="price"
       />
-      <button class="add_form__btn" type="submit">Добавить товар</button>
+      <button class="add_form__btn"  type="submit">Добавить товар</button>
     </form>
   </div>
 </template>
 
 <script>
-import axios from "axios";
+import { validationMixin } from 'vuelidate'
+import { required, minLength, email } from 'vuelidate/lib/validators'
 
 export default {
+  mixins: [validationMixin],
   data() {
     return {
       name: '',
-      textarea: '',
+      description: '',
       img: '',
       price: '',
     };
@@ -56,32 +58,32 @@ export default {
   computed: {
     getProducts() {
       return this.$store.getters['products']
-    }
+    },
+
   },
   methods: {
     postProduct() {
-      const response = axios.post('https://test-task-23b17-default-rtdb.firebaseio.com/api.json', {
-        name: this.name,
-        textarea: this.textarea,
-        img: this.img,
-        price: this.price,
-      }).then(response => {
-        console.log(response)
-        this.name = '',
-        this.textarea = '',
-        this.img = '',
-        this.price = '',
-        this.loader()
-      }).catch(error => {
-        console.log(error)
-      })
+      this.$store.dispatch('postProduct', [this.name, this.description, this.img, this.price])
     },
     loader(){
       this.$store.dispatch('loader')
+    },
+    clearInputs(){
+      this.name = ''
+      this.description = ''
+      this.img = ''
+      this.price = ''
     }
   },
   mounted() {
     this.loader()
+  },
+  validations: {
+    name: {
+      length(value){
+        return console.log(value)
+      }
+    },
   },
 }
 </script>
@@ -92,6 +94,7 @@ export default {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
   border: none;
+  outline: none;
 }
 
 $font-source: "Source Sans Pro", sans-serif;
@@ -114,7 +117,7 @@ $input-margin: 0 0 16px 0;
   font-family: $font-source;
   & label {
     font-size: 10px;
-    line-height: 0px;
+    line-height: 0;
     letter-spacing: -0.02em;
     color: #49485e;
     margin: 0 0 4px 0;
@@ -145,15 +148,12 @@ $input-margin: 0 0 16px 0;
     padding: $input-padding;
     font-family: $font-inter;
     font-size: 12px;
+    outline: none;
     line-height: 15px;
     text-align: center;
     letter-spacing: -0.02em;
     color: #b4b4b4;
     background: #eeeeee;
   }
-}
-
-.hide {
-  visibility: hidden;
 }
 </style>

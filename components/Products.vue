@@ -6,7 +6,7 @@
         <img :src="product.img" class="product-img" alt="">
         <div class="title-box">
         <p class="title">{{ product.name }}</p>
-        <p class="txt">{{ product.textarea }}</p>
+        <p class="txt">{{ product.description }}</p>
         <span class="price">{{ product.price }}<span> руб.</span></span>
         </div>
       </div>
@@ -26,7 +26,7 @@ export default {
     removeProduct(id){
       this.$store.dispatch('removeProduct', id)
     }
-  }
+  },
 };
 
 </script>
