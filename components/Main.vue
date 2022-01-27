@@ -25,5 +25,6 @@ export default {
   display: flex;
   padding: 32px;
   background: #e5e5e5;
+  height: 100vh;
 }
 </style>

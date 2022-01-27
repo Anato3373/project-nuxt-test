@@ -12,7 +12,7 @@ export const mutations = {
         ...data[key]
       }
     })
-    state.products
+    state.products.reverse()
   },
   REMOVE_PRODUCTS(state, arr) {
     state.products = arr
@@ -35,12 +35,12 @@ export const actions = {
   },
   removeProduct(ctx, id){
     axios.delete(`https://test-task-23b17-default-rtdb.firebaseio.com/api/${id}.json`)
-      .then(res => {
+      .then(() => {
         ctx.commit('REMOVE_PRODUCTS', this.state.products.filter(prod => prod.id !== id))
       })
   },
   postProduct(ctx,[name, description, img, price]){
-    const response = axios.post('https://test-task-23b17-default-rtdb.firebaseio.com/api.json', {
+    axios.post('https://test-task-23b17-default-rtdb.firebaseio.com/api.json', {
       name: name,
       description: description,
       img: img,

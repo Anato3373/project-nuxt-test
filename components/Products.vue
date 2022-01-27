@@ -1,7 +1,7 @@
 <template>
   <div class="product">
     <section class="product-section" v-for="product in getProducts" :key="product.id">
-      <div class="product-card">
+      <div class="product-card" v-if="getProducts.length >= 1">
         <button class="del" @click="removeProduct(product.id)"><img src="../static/delete 1.png" alt=""></button>
         <img :src="product.img" class="product-img" alt="">
         <div class="title-box">
@@ -10,6 +10,7 @@
         <span class="price">{{ product.price }}<span> руб.</span></span>
         </div>
       </div>
+      <div v-else>Список товаров пуст</div>
     </section>
   </div>
 </template>
@@ -51,7 +52,6 @@ $margin: 0;
   border-radius: 4px;
   font-family: Source Sans Pro;
   color: #3F3F3F;
-  cursor: pointer;
   position: relative;
   .del{
     display: none;
