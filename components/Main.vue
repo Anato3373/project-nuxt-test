@@ -1,18 +1,23 @@
 <template>
   <div class="main">
-    <Form />
-    <Products />
+    <Header/>
+    <div class="main-page">
+      <Form />
+      <Products />
+    </div>
   </div>
 </template>
 
 <script>
 import Form from "@/components/Form";
 import Products from "@/components/Products.vue";
+import Header from "@/components/Header.vue";
 
 export default {
   components: {
     Form,
     Products,
+    Header,
   },
 };
 </script>
@@ -20,11 +25,21 @@ export default {
 <style lang="scss">
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@600&family=Source+Sans+Pro:wght@400;600&display=swap");
 
-
-.main {
-  display: flex;
-  padding: 32px;
+.main{
   background: #e5e5e5;
-  height: 100vh;
+  padding: 32px;
+  min-height: 100vh;
+}
+
+.main-page {
+  display: flex;
+}
+
+@media (max-width: 760px){
+  .main-page{
+    padding: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
 }
 </style>

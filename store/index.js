@@ -14,11 +14,23 @@ export const mutations = {
     })
     state.products.reverse()
   },
-  REMOVE_PRODUCTS(state, arr) {
+  REMOVE_PRODUCTS(state, id) {
+    const arr = state.products.filter(prod => prod.id !== id)
     state.products = arr
   },
   POST_TO_PRODUCTS(state, array){
     state.products.unshift(array)
+  },
+  FILTER(state, value){
+    const filteredProd = this.state.products.sort((a, b) => {
+      if (value === 'ascending') {
+        return a.price - b.price
+      } else if (value === 'descending') {
+        return b.price - a.price
+      }
+      return state.products
+    })
+    state.products = filteredProd
   }
 }
 
@@ -36,7 +48,7 @@ export const actions = {
   removeProduct(ctx, id){
     axios.delete(`https://test-task-23b17-default-rtdb.firebaseio.com/api/${id}.json`)
       .then(() => {
-        ctx.commit('REMOVE_PRODUCTS', this.state.products.filter(prod => prod.id !== id))
+        ctx.commit('REMOVE_PRODUCTS', id)
       })
   },
   postProduct(ctx,[name, description, img, price]){
@@ -56,7 +68,10 @@ export const actions = {
     }).catch(error => {
       console.log(error)
     })
-  }
+  },
+  sort(ctx, value) {
+    ctx.commit('FILTER', value)
+  },
 }
 
 export const getters = {

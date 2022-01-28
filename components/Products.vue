@@ -26,7 +26,13 @@ export default {
   methods: {
     removeProduct(id){
       this.$store.dispatch('removeProduct', id)
-    }
+    },
+    loader() {
+      this.$store.dispatch("loader");
+    },
+  },
+  mounted() {
+    this.loader();
   },
 };
 
@@ -37,9 +43,9 @@ $margin: 0;
 
 .product {
   height: 100%;
-  width: 1400px;
   display: flex;
   flex-wrap: wrap;
+  max-width: 1400px;
 }
 .product-section{
   margin: 0 16px 16px 0;
@@ -98,6 +104,11 @@ $margin: 0;
     margin: $margin;
     font-weight: 600;
     font-size: 24px;
+  }
+}
+@media (max-width: 760px){
+  .product-section{
+    margin: 10px auto;
   }
 }
 

@@ -47,7 +47,6 @@
         id="price"
         placeholder="Введите цену"
         type="text"
-        v-text="splitNumber(form.price)"
         v-model="form.price"
         :class="$v.form.price.$error ? 'invalid' : ''"/>
       <span
@@ -74,6 +73,7 @@
 <script>
 import { validationMixin } from "vuelidate";
 import { required, decimal, url } from "vuelidate/lib/validators";
+import axios from "axios";
 
 export default {
   mixins: [validationMixin],
@@ -85,16 +85,20 @@ export default {
         img: "",
         price: "",
       },
-      
     };
   },
   computed: {
     getProducts() {
       return this.$store.getters["products"];
     },
-
   },
   methods: {
+    checkForm() {
+      this.$v.form.$touch();
+      if (!this.$v.form.$error) {
+        this.postProduct();
+      }
+    },
     postProduct() {
       this.$store.dispatch("postProduct", [
         this.form.name,
@@ -103,33 +107,7 @@ export default {
         this.form.price,
       ]);
     },
-    loader() {
-      this.$store.dispatch("loader");
-    },
-    clearInputs() {
-      this.form.name = "";
-      this.form.description = "";
-      this.form.img = "";
-      this.form.price = "";
-    },
-    checkForm() {
-      this.$v.form.$touch();
-      if (!this.$v.form.$error) {
-        this.postProduct();
-        this.clearInputs();
-      }
-    },
-    splitNumber(value){
-      if (value.length >= 1) {
-        this.form.price = value.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-      }
-      else{
-        value
-      }
-    }
-  },
-  mounted() {
-    this.loader();
+
   },
   validations: {
     form: {
@@ -157,21 +135,24 @@ $input-padding: 10px 15px;
 $input-margin: 0 0 16px 0;
 .block{
   width: 332px;
+  height: 480px;
   margin: 0 16px 0 0;
   display: flex;
+  flex-shrink: 0;
 }
 .form_block {
-  width: 100%;
+  width: 332px;
   display: flex;
   position: fixed;
 }
 .add_form {
   @extend %input-style;
+  width: 100%;
   display: flex;
   flex-direction: column;
   padding: 24px;
   max-width: 282px;
-  
+
   width: 100%;
   font-family: $font-source;
   & label {
@@ -236,5 +217,14 @@ $input-margin: 0 0 16px 0;
 .enabled {
   background: #7bae73;
   color: #ffffff;
+}
+@media (max-width: 760px){
+  .block{
+    margin: 0 auto 10px;
+  }
+  .form_block{
+    position: sticky;
+
+  }
 }
 </style>
