@@ -5,7 +5,7 @@
         <button class="del" @click="removeProduct(product.id)"><img src="../static/delete 1.png" alt=""></button>
         <img :src="product.img" class="product-img" alt="">
         <div class="title-box">
-        <p class="title">{{ product.name }}</p>
+        <p class="title">{{ product.title }}</p>
         <p class="txt">{{ product.description }}</p>
         <span class="price">{{ product.price }}<span> руб.</span></span>
         </div>
@@ -31,8 +31,8 @@ export default {
       this.$store.dispatch("loader");
     },
   },
-  mounted() {
-    this.loader();
+  async mounted() {
+    await this.loader();
   },
 };
 
@@ -48,7 +48,7 @@ $margin: 0;
   max-width: 1400px;
 }
 .product-section{
-  margin: 0 16px 16px 0;
+  margin: 0 14px 14px 0;
 }
 .product-card{
   width: 332px;

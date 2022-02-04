@@ -22,24 +22,6 @@ export default {
 };
 </script>
 
-<style lang="scss">
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@600&family=Source+Sans+Pro:wght@400;600&display=swap");
-
-.main{
-  background: #e5e5e5;
-  padding: 32px;
-  min-height: 100vh;
-}
-
-.main-page {
-  display: flex;
-}
-
-@media (max-width: 760px){
-  .main-page{
-    padding: 15px;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-}
+<style>
+@import url('../static/style.scss');
 </style>
