@@ -2,65 +2,68 @@
 <div class="block">
   <div class="form_block">
     <form @submit.prevent="checkForm()" class="add_form">
-      <label for="name">Наименование товара<span v-if="form.name.length < 1"></span></label>
+      <label for="name">Наименование товара<span v-if="title.length < 1"></span></label>
       <input
         type="text"
         id="name"
         placeholder="Введите наименование товара"
         class="add_form__input"
-        v-model="form.name"
-        :class="$v.form.name.$error ? 'invalid' : ''"
+        v-model="title"
+        :class="{ invalid: nameError }"
+        @blur="blurName = true"
       />
       <span
-        v-if="$v.form.name.$dirty && !$v.form.name.required"
+        v-if="nameError"
         class="error-box">Поле является обязательным</span>
       <label for="description"
-        >Описание товара<span v-if="form.description.length < 1"></span></label>
+        >Описание товара<span v-if="description.length < 1"></span></label>
       <textarea
         class="add_form__txtar"
         placeholder="Введите описание товара"
         id="description"
         cols="30"
         rows="10"
-        v-model="form.description"
-        :class="$v.form.description.$error ? 'invalid' : ''"></textarea>
-      <span
-        v-if="$v.form.description.$dirty && !$v.form.description.required"
-        class="error-box">Поле является обязательным</span>
-      <label for="img">Ссылка на изображение товара<span v-if="form.img.length < 1"></span></label>
+        v-model="description"
+      ></textarea>
+
+      <label for="img">Ссылка на изображение товара<span v-if="img.length < 1"></span></label>
       <input
         class="add_form__input"
         id="img"
         placeholder="Введите ссылку"
         type="text"
-        v-model="form.img"
-        :class="$v.form.img.$error ? 'invalid' : ''"/>
-      <span v-if="$v.form.img.$dirty && !$v.form.img.required" class="error-box"
+        v-model="img"
+        :class="{ invalid: checkUrl }"
+        @blur="blurUrl = true"
+      />
+      <span v-if="urlError" class="error-box"
         >Поле является обязательным</span>
-      <span v-if="$v.form.img.$dirty && !$v.form.img.url" class="error-box"
+      <span v-if="checkUrl" class="error-box"
         >Url неккоректный</span>
       <label for="price"
-        >Цена товара<span v-if="form.price.length < 1"></span>
+        >Цена товара<span v-if="price.length < 1"></span>
       </label>
       <input
         class="add_form__input"
         id="price"
         placeholder="Введите цену"
         type="text"
-        v-model="form.price"
-        :class="$v.form.price.$error ? 'invalid' : ''"/>
+        v-model="price"
+        :class="{ invalid: decimal }"
+        @blur="blurPrice = true"
+      />
       <span
-        v-if="$v.form.price.$dirty && !$v.form.price.required"
+        v-if="priceError"
         class="error-box"
         >Поле является обязательным</span>
       <span
-        v-if="$v.form.price.$dirty && !$v.form.price.decimal"
+        v-if="decimal"
         class="error-box"
         >Используйте только числа</span
       >
       <button
         class="add_form__btn"
-        :disabled="$v.form.$error || !$v.form.name.required || !$v.form.description.required || !$v.form.img.required || !$v.form.price.required"
+        :disabled="disabledBtn"
         type="submit"
       >
         Добавить товар
@@ -71,51 +74,84 @@
 </template>
 
 <script>
-import { validationMixin } from "vuelidate";
-import { required, decimal, url } from "vuelidate/lib/validators";
-import axios from "axios";
-
 export default {
-  mixins: [validationMixin],
   data() {
     return {
-      form: {
-        name: "",
-        description: "",
-        img: "",
-        price: "",
-      },
+      blurPrice: false,
+      blurName: false,
+      blurUrl: false,
     };
   },
   computed: {
+    title: {
+      get() {
+        return this.$store.state.form.title
+      },
+      set(val) {
+        this.$store.commit('TITLE_VALUE', val)
+      }
+    },
+    description: {
+      get() {
+        return this.$store.state.form.description
+      },
+      set(val) {
+        this.$store.commit('DESCRIPTION_VALUE', val)
+      }
+    },
+    img: {
+      get() {
+        return this.$store.state.form.img
+      },
+      set(val) {
+        this.$store.commit('IMG_VALUE', val)
+      }
+    },
+    price: {
+      get() {
+        return this.$store.state.form.price
+      },
+      set(val) {
+        this.$store.commit('PRICE_VALUE', val)
+      }
+    },
     getProducts() {
       return this.$store.getters["products"];
     },
+    disabledBtn(){
+      return !(this.title
+        && !this.checkUrl
+        && !this.decimal
+        && this.img
+        && this.price)
+    },
+    priceError(){
+      return this.blurPrice && !this.price
+    },
+    urlError(){
+      return this.blurUrl && !this.img
+    },
+    nameError(){
+      return this.blurName && !this.title
+    },
+    decimal(){
+      return this.blurPrice && !/^[0-9]+$/.test(this.price)
+    },
+    checkUrl(){
+      return this.blurUrl && !/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.-]*)*\/?$/.test(this.img)
+    }
   },
   methods: {
     checkForm() {
-      this.$v.form.$touch();
-      if (!this.$v.form.$error) {
-        this.postProduct();
-      }
+        this.postProduct()
+        this.blurPrice = false
+        this.blurName = false
+        this.blurUrl = false
     },
     postProduct() {
-      this.$store.dispatch("postProduct", [
-        this.form.name,
-        this.form.description,
-        this.form.img,
-        this.form.price,
-      ]);
+      this.$store.dispatch("postProduct");
     },
 
-  },
-  validations: {
-    form: {
-      name: { required },
-      description: { required },
-      img: { required, url },
-      price: { required, decimal },
-    },
   },
 };
 </script>
