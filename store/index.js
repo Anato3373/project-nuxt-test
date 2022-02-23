@@ -59,7 +59,7 @@ export const mutations = {
 export const actions = {
   async loader(ctx) {
     try {
-      const {data} = await axios.get('https://test-task-23b17-default-rtdb.firebaseio.com/api.json')
+      const {data} = await axios.get('https://for-test-project-5e061-default-rtdb.firebaseio.com/api.json')
       if (!data) {
         throw new Error('Список пуст')
       }
@@ -69,13 +69,13 @@ export const actions = {
     }
   },
   removeProduct(ctx, id){
-    axios.delete(`https://test-task-23b17-default-rtdb.firebaseio.com/api/${id}.json`)
+    axios.delete(`https://for-test-project-5e061-default-rtdb.firebaseio.com/api/${id}.json`)
       .then(() => {
         ctx.commit('REMOVE_PRODUCTS', id)
       })
   },
   async postProduct({commit, state}){
-    await axios.post('https://test-task-23b17-default-rtdb.firebaseio.com/api.json', {
+    await axios.post('https://for-test-project-5e061-default-rtdb.firebaseio.com/api.json', {
       title: state.form.title,
       description: state.form.description,
       img: state.form.img,
